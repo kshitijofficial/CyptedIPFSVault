@@ -30,7 +30,8 @@ const GetImage = ({reload}) => {
                 console.log(ipfsHashesArray)
                 const response = await axios.post(
                     `http://localhost:3000/api/getAllImages?page=${currentPage}&limit=${imagesPerPage}`,ipfsHashesArray,config);
-                if(response.status===200){
+                console.log(response)
+                    if(response.status===200){
                     const imageArray = response.data.decryptedImages;
                     console.log(imageArray.length)
                     !imageArray.length?setImageStatus(false):setImages(imageArray);     

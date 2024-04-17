@@ -8,9 +8,11 @@ const PINATA_GATEWAY_URL = "https://gateway.pinata.cloud/ipfs/";
 
 async function getAllImages(req, res) {
     try {
-        const userId = req.accountAddress;
+        const address = req.accountAddress;
+        console.log(address)
+        const userId=address.toLowerCase()
         const user = await UserModel.findOne({ userId: userId });
-
+      
         if (!user) {
             throw new Error('User not found with ID: ' + userId);
         }
@@ -43,6 +45,7 @@ async function getAllImages(req, res) {
                 return response;
             }));
             // Iterate over each pair of encryptedData and iv, decrypt them, and store in decryptedImages
+            
             for (const pair of encryptedDataArr) {
                 const decryptedData = decryptData(pair.encryptedData, pair.iv, user.encryptionKey);
                 decryptedImages.push(decryptedData.toString('base64'));

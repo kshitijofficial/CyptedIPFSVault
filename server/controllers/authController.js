@@ -2,7 +2,8 @@
 
 const ethers = require('ethers');
 const jwt = require('jsonwebtoken');
-const {JWT_SECRET}=require('../config/serverConfig')
+// const {JWT_SECRET}=require('../config/serverConfig')
+const UserModel = require('../models/User')
 
 async function authenticate(req, res, next) {
     try {
@@ -14,10 +15,19 @@ async function authenticate(req, res, next) {
         }
 
         const recoveredAddress = ethers.utils.verifyMessage("Authentication message", signature);
-
+        
         if (accountAddress.toLowerCase() === recoveredAddress.toLowerCase()) {
-            const token = jwt.sign({ accountAddress }, JWT_SECRET,{ expiresIn: '1h' });
-            return res.status(200).json({ authenticated: true,message: "Authentication Successful!", token });
+            const address = recoveredAddress.toLowerCase();
+            let user = await UserModel.findOne({ userId: address });
+            if (!user) {
+                user = await UserModel.create({
+                    userId: address,
+                });
+            }
+            const token  = jwt.sign({
+                address
+            },'secretKey') 
+            return res.status(200).json({ authenticated: true,message: "Authentication Successfull!", token });
         } else {
             return res.status(404).json({ authenticated: false, message: 'Authentication Failed!' });
         }

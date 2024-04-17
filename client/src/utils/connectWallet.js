@@ -23,7 +23,7 @@ export const connectWallet = async()=>{
         responseType:'json'
       });
  
-      if(response.data.message!=="Authentication Successful!"){
+      if(response.data.message!=="Authentication Successfull!"){
         console.log(response.data.message)
         throw new Error(response.data.message)
       }

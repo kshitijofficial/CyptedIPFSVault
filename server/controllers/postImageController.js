@@ -9,7 +9,6 @@ async function uploadImage(req, res) {
     try {
         const userId = req.accountAddress;
         const user = await UserModel.findOne({ userId: userId });
-        console.log(user)
         if (user.encryptionKey===null) {
             const encryptionKey = generateEncryptionKey(32);
             user.encryptionKey = encryptionKey;
